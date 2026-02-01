@@ -39,7 +39,14 @@ export default function SignUpPage() {
         },
       })
 
-      if (authError) throw authError
+      if (authError) {
+        const msg = authError.message.toLowerCase()
+        if (msg.includes('already') || msg.includes('registered') || msg.includes('exists')) {
+          setError('An account with this email already exists. Please log in instead.')
+          return
+        }
+        throw authError
+      }
 
       router.push('/auth/sign-up-success')
     } catch (err) {
@@ -94,6 +101,7 @@ export default function SignUpPage() {
                 required
               />
             </div>
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium mb-2">
                 Email
@@ -103,10 +111,11 @@ export default function SignUpPage() {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value.trim())}
                 required
               />
             </div>
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium mb-2">
                 Password
@@ -120,6 +129,7 @@ export default function SignUpPage() {
                 required
               />
             </div>
+
             <div>
               <label htmlFor="usertype" className="block text-sm font-medium mb-2">
                 I am a
@@ -134,7 +144,9 @@ export default function SignUpPage() {
                 <option value="admin">Faculty/Admin</option>
               </select>
             </div>
+
             {error && <div className="text-red-600 text-sm">{error}</div>}
+
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Signing up...' : 'Sign Up'}
             </Button>
@@ -179,6 +191,7 @@ export default function SignUpPage() {
               </svg>
               Sign up with Google
             </Button>
+
             <Button
               type="button"
               variant="outline"
