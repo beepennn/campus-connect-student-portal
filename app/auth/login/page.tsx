@@ -16,8 +16,19 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [oauthLoading, setOAuthLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [rememberMe, setRememberMe] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+
+  React.useEffect(() => {
+    // Load saved email if exists
+    const savedEmail = localStorage.getItem('campusconnect_email')
+    const savedRememberMe = localStorage.getItem('campusconnect_remember') === 'true'
+    if (savedEmail && savedRememberMe) {
+      setEmail(savedEmail)
+      setRememberMe(true)
+    }
+  }, [])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -25,12 +36,25 @@ export default function LoginPage() {
     setError(null)
 
     try {
+      if (!email || !password) {
+        throw new Error('Please enter both email and password')
+      }
+
       const { error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
       if (authError) throw authError
+
+      // Handle Remember Me
+      if (rememberMe) {
+        localStorage.setItem('campusconnect_email', email)
+        localStorage.setItem('campusconnect_remember', 'true')
+      } else {
+        localStorage.removeItem('campusconnect_email')
+        localStorage.removeItem('campusconnect_remember')
+      }
 
       router.push('/protected/dashboard')
     } catch (err) {
@@ -94,7 +118,26 @@ export default function LoginPage() {
                 required
               />
             </div>
-            {error && <div className="text-red-600 text-sm">{error}</div>}
+
+            <div className="flex items-center justify-between">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300"
+                />
+                <span className="text-sm font-medium">Remember me</span>
+              </label>
+              <Link
+                href="/auth/forgot-password"
+                className="text-sm text-blue-600 hover:underline font-medium"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
+            {error && <div className="text-red-600 text-sm bg-red-50 p-3 rounded border border-red-200">{error}</div>}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Logging in...' : 'Log In'}
             </Button>

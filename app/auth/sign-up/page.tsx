@@ -13,13 +13,26 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [fullName, setFullName] = useState('')
   const [userType, setUserType] = useState<'student' | 'admin'>('student')
   const [loading, setLoading] = useState(false)
   const [oauthLoading, setOAuthLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [passwordStrength, setPasswordStrength] = useState(0)
   const router = useRouter()
   const supabase = createClient()
+
+  // Calculate password strength
+  React.useEffect(() => {
+    let strength = 0
+    if (password.length >= 8) strength++
+    if (password.length >= 12) strength++
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++
+    if (/\d/.test(password)) strength++
+    if (/[^a-zA-Z\d]/.test(password)) strength++
+    setPasswordStrength(strength)
+  }, [password])
 
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault()
@@ -27,6 +40,23 @@ export default function SignUpPage() {
     setError(null)
 
     try {
+      // Validation
+      if (!fullName.trim()) {
+        throw new Error('Please enter your full name')
+      }
+      if (!email.trim()) {
+        throw new Error('Please enter your email')
+      }
+      if (password.length < 8) {
+        throw new Error('Password must be at least 8 characters')
+      }
+      if (password !== confirmPassword) {
+        throw new Error('Passwords do not match')
+      }
+      if (passwordStrength < 2) {
+        throw new Error('Password is too weak. Use uppercase, lowercase, numbers, and symbols')
+      }
+
       const { error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -47,6 +77,20 @@ export default function SignUpPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const getStrengthColor = (strength: number) => {
+    if (strength <= 1) return 'bg-red-500'
+    if (strength <= 2) return 'bg-yellow-500'
+    if (strength <= 3) return 'bg-blue-500'
+    return 'bg-green-500'
+  }
+
+  const getStrengthText = (strength: number) => {
+    if (strength <= 1) return 'Weak'
+    if (strength <= 2) return 'Fair'
+    if (strength <= 3) return 'Good'
+    return 'Strong'
   }
 
   async function handleOAuthSignUp(provider: 'google' | 'github') {
@@ -119,6 +163,37 @@ export default function SignUpPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              {password && (
+                <div className="mt-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-medium">Password Strength:</span>
+                    <span className="text-xs font-medium">{getStrengthText(passwordStrength)}</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full transition-all ${getStrengthColor(passwordStrength)}`}
+                      style={{ width: `${(passwordStrength / 5) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
+                Confirm Password
+              </label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+              {password && confirmPassword && password !== confirmPassword && (
+                <p className="text-xs text-red-600 mt-1">Passwords do not match</p>
+              )}
             </div>
             <div>
               <label htmlFor="usertype" className="block text-sm font-medium mb-2">
@@ -134,8 +209,16 @@ export default function SignUpPage() {
                 <option value="admin">Faculty/Admin</option>
               </select>
             </div>
-            {error && <div className="text-red-600 text-sm">{error}</div>}
-            <Button type="submit" className="w-full" disabled={loading}>
+            {error && (
+              <div className="text-red-600 text-sm bg-red-50 p-3 rounded border border-red-200">
+                {error}
+              </div>
+            )}
+            <Button 
+              type="submit" 
+              className="w-full" 
+              disabled={loading || !fullName || !email || !password || !confirmPassword || password !== confirmPassword}
+            >
               {loading ? 'Signing up...' : 'Sign Up'}
             </Button>
           </form>
