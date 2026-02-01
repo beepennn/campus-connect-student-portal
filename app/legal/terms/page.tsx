@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const metadata: Metadata = {
   title: 'Terms',
@@ -7,93 +8,122 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
+function HomeIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" {...props}>
+      <path
+        fill="currentColor"
+        d="M12 3.2 3 10.5V21a1 1 0 0 0 1 1h5v-6.2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V22h5a1 1 0 0 0 1-1V10.5l-9-7.3ZM19 20h-3v-4.2a3 3 0 0 0-3-3h-2a3 3 0 0 0-3 3V20H5v-8.6l7-5.7 7 5.7V20Z"
+      />
+    </svg>
+  )
+}
+
 export default function TermsPage() {
+  const lastUpdated = '2026-01-01' // set your real date
+
   return (
     <main className="min-h-screen bg-background">
       <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
-          <p className="text-sm text-muted-foreground">
-            <Link href="/" className="underline underline-offset-4 hover:no-underline">
-              Home
-            </Link>{' '}
-            / Legal / Terms
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Terms of Service</h1>
-          <p className="mt-3 text-muted-foreground">
+        <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+          {/* Breadcrumb with SVG Home button */}
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Link
+              href="/"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background hover:bg-accent hover:text-foreground transition-colors
+                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              aria-label="Home"
+              title="Home"
+            >
+              <HomeIcon className="h-4 w-4" />
+            </Link>
+
+            <span aria-hidden="true">/</span>
+            <span className="font-medium">Legal</span>
+            <span aria-hidden="true">/</span>
+            <span className="text-foreground font-medium">Terms</span>
+          </nav>
+
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Terms of Service</h1>
+          <p className="mt-3 max-w-3xl text-muted-foreground">
             These Terms govern your use of CampusConnect. By using the service, you agree to these Terms.
           </p>
-          <p className="mt-2 text-sm text-muted-foreground">Last updated: {new Date().getFullYear()}-01-01</p>
+
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
+            Last updated: {lastUpdated}
+          </div>
         </div>
       </header>
 
-      <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>1. Eligibility</h2>
-          <p>
-            You must be at least 13 years old (or the minimum age required in your country) to use CampusConnect. If you
-            are using CampusConnect on behalf of an institution, you represent that you have authority to bind that
-            institution to these Terms.
-          </p>
+      {/* Terms in a “box” (Card) with better styling */}
+      <section className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+        <Card className="border-border/70 shadow-sm">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-base">CampusConnect Terms</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Please read carefully. If you do not agree, do not use the service.
+            </p>
+          </CardHeader>
 
-          <h2>2. Accounts and security</h2>
-          <p>
-            You are responsible for maintaining the confidentiality of your login credentials and for all activities
-            under your account. Notify us immediately if you suspect unauthorized access.
-          </p>
+          <CardContent className="p-6 sm:p-8">
+            <div className="prose prose-neutral max-w-none dark:prose-invert">
+              <h2>1. Eligibility</h2>
+              <p>
+                You must be at least 13 years old (or the minimum age required in your country) to use CampusConnect. If
+                you are using CampusConnect on behalf of an institution, you represent that you have authority to bind
+                that institution to these Terms.
+              </p>
 
-          <h2>3. Acceptable use</h2>
-          <ul>
-            <li>Do not upload illegal, harmful, or infringing content.</li>
-            <li>Do not attempt to access data you are not authorized to access.</li>
-            <li>Do not disrupt or overload the service (e.g., scraping, abuse, or attacks).</li>
-            <li>Follow your institution’s policies when using CampusConnect.</li>
-          </ul>
+              <h2>2. Accounts and security</h2>
+              <p>
+                You are responsible for maintaining the confidentiality of your login credentials and for all activities
+                under your account. Notify us immediately if you suspect unauthorized access.
+              </p>
 
-          <h2>4. Content</h2>
-          <p>
-            You retain ownership of content you submit. You grant CampusConnect a limited license to host, store, and
-            display your content solely to operate the service.
-          </p>
+              <h2>3. Acceptable use</h2>
+              <ul>
+                <li>Do not upload illegal, harmful, or infringing content.</li>
+                <li>Do not attempt to access data you are not authorized to access.</li>
+                <li>Do not disrupt or overload the service (e.g., scraping, abuse, or attacks).</li>
+                <li>Follow your institution’s policies when using CampusConnect.</li>
+              </ul>
 
-          <h2>5. Materials and notices</h2>
-          <p>
-            CampusConnect may display academic materials and campus notices provided by faculty/admins. CampusConnect is
-            not responsible for accuracy, completeness, or timeliness of third-party content.
-          </p>
+              <h2>4. Content</h2>
+              <p>
+                You retain ownership of content you submit. You grant CampusConnect a limited license to host, store, and
+                display your content solely to operate the service.
+              </p>
 
-          <h2>6. Termination</h2>
-          <p>
-            We may suspend or terminate access if you violate these Terms or pose a security risk. You may stop using
-            CampusConnect at any time.
-          </p>
+              <h2>5. Termination</h2>
+              <p>
+                We may suspend or terminate access if you violate these Terms or pose a security risk. You may stop
+                using CampusConnect at any time.
+              </p>
 
-          <h2>7. Disclaimers</h2>
-          <p>
-            CampusConnect is provided “as is” and “as available”. To the maximum extent allowed by law, we disclaim all
-            warranties, including fitness for a particular purpose and non-infringement.
-          </p>
+              <h2>6. Disclaimers</h2>
+              <p>
+                CampusConnect is provided “as is” and “as available”. To the maximum extent allowed by law, we disclaim
+                all warranties, including fitness for a particular purpose and non-infringement.
+              </p>
 
-          <h2>8. Limitation of liability</h2>
-          <p>
-            To the maximum extent permitted by law, CampusConnect will not be liable for indirect, incidental, special,
-            consequential, or punitive damages, or any loss of data or profits.
-          </p>
+              <h2>7. Limitation of liability</h2>
+              <p>
+                To the maximum extent permitted by law, CampusConnect will not be liable for indirect, incidental,
+                special, consequential, or punitive damages, or any loss of data or profits.
+              </p>
 
-          <h2>9. Changes to these Terms</h2>
-          <p>
-            We may update these Terms from time to time. Continued use of the service after changes means you accept the
-            updated Terms.
-          </p>
-
-          <h2>10. Contact</h2>
-          <p>
-            Questions about these Terms? Contact us via the{' '}
-            <Link href="/support" className="underline underline-offset-4 hover:no-underline">
-              Support
-            </Link>{' '}
-            page.
-          </p>
-        </div>
+              <h2>8. Contact</h2>
+              <p>
+                Questions about these Terms? Visit{' '}
+                <Link href="/support" className="underline underline-offset-4 hover:no-underline">
+                  Support
+                </Link>
+                .
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </section>
     </main>
   )
