@@ -2,102 +2,133 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
+const features = [
+  {
+    title: 'Notices',
+    description: 'Stay updated with important campus announcements in one place.',
+  },
+  {
+    title: 'Materials',
+    description: 'Access course materials shared by faculty, organized and searchable.',
+  },
+  {
+    title: 'Events',
+    description: 'Discover campus events, deadlines, and activities you care about.',
+  },
+  {
+    title: 'Announcements',
+    description: 'Quick updates from departments and student bodies—no noise.',
+  },
+] as const
+
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background">
+      {/* Skip link (accessibility) */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:text-sm focus:shadow"
+      >
+        Skip to content
+      </a>
+
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold">C</span>
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+              <span className="font-bold" aria-hidden="true">
+                C
+              </span>
+              <span className="sr-only">CampusConnect</span>
             </div>
-            <h1 className="text-2xl font-bold text-foreground">CampusConnect</h1>
+            <span className="text-lg font-semibold tracking-tight sm:text-xl">CampusConnect</span>
+          </Link>
+
+          <nav aria-label="Primary" className="flex items-center gap-2 sm:gap-3">
+            <Button asChild variant="outline">
+              <Link href="/auth/login">Log in</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/auth/sign-up">Sign up</Link>
+            </Button>
+          </nav>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        {/* subtle background decoration */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-32 left-1/2 h-72 w-[44rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute -bottom-32 left-1/4 h-72 w-[44rem] -translate-x-1/2 rounded-full bg-indigo-500/10 blur-3xl" />
+        </div>
+
+        <div id="main" className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              Connect with your campus community
+            </h1>
+            <p className="mt-5 text-pretty text-base text-muted-foreground sm:text-lg">
+              Stay informed with notices, access course materials, discover events, and engage with your campus through one unified platform.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <Button asChild size="lg" className="w-full sm:w-auto">
+                <Link href="/auth/sign-up">Get started</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto bg-transparent">
+                <Link href="/auth/login">Log in</Link>
+              </Button>
+            </div>
+
+            <p className="mt-4 text-xs text-muted-foreground">
+              Built for students and faculty. Secure sign-in. Mobile friendly.
+            </p>
           </div>
-          <div className="space-x-4">
-            <Link href="/auth/login">
-              <Button variant="outline">Log In</Button>
-            </Link>
-            <Link href="/auth/sign-up">
-              <Button>Sign Up</Button>
-            </Link>
+
+          {/* Features */}
+          <div className="mx-auto mt-14 grid max-w-5xl gap-4 sm:mt-16 sm:grid-cols-2 lg:grid-cols-4">
+            {features.map((f) => (
+              <Card
+                key={f.title}
+                className="group border-border/70 bg-card/60 backdrop-blur transition-shadow hover:shadow-md"
+              >
+                <CardHeader className="space-y-2">
+                  <CardTitle className="text-base font-semibold text-foreground">
+                    <span className="text-primary">{f.title}</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{f.description}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
-      </nav>
-
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-          <div className="text-center space-y-8">
-            <div className="space-y-4">
-              <h2 className="text-5xl sm:text-6xl font-bold text-foreground leading-tight">
-                Connect with Your Campus Community
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Stay informed with notices, access course materials, discover events, and engage with your campus through one unified platform.
-              </p>
-            </div>
-
-            {/* Features Grid */}
-            <div className="grid md:grid-cols-4 gap-6 mt-16">
-              <Card className="border-border hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-lg text-primary">Notices</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Stay updated with important campus announcements</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-border hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-lg text-primary">Materials</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Access course materials shared by faculty</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-border hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-lg text-primary">Events</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Discover campus events and activities</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-border hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-lg text-primary">Announcements</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Quick updates from your campus</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
-              <Link href="/auth/sign-up">
-                <Button size="lg" className="w-full sm:w-auto">Get Started</Button>
-              </Link>
-              <Link href="/auth/login">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent">Log In</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+      </section>
 
       {/* Footer */}
-      <div className="border-t border-border bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-          <p className="text-muted-foreground text-sm">
-            CampusConnect © 2024. A modern campus communication platform.
-          </p>
+      <footer className="border-t border-border bg-card">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} CampusConnect. All rights reserved.
+            </p>
+            <nav aria-label="Footer" className="flex items-center gap-4 text-sm">
+              <Link className="text-muted-foreground underline-offset-4 hover:underline" href="/legal/privacy">
+                Privacy
+              </Link>
+              <Link className="text-muted-foreground underline-offset-4 hover:underline" href="/legal/terms">
+                Terms
+              </Link>
+              <Link className="text-muted-foreground underline-offset-4 hover:underline" href="/support">
+                Support
+              </Link>
+            </nav>
+          </div>
         </div>
-      </div>
-    </div>
+      </footer>
+    </main>
   )
 }
