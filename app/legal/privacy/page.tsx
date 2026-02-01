@@ -19,14 +19,111 @@ function HomeIcon(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
+function SectionBox({
+  title,
+  children,
+  index,
+}: {
+  title: string
+  children: React.ReactNode
+  index: number
+}) {
+  return (
+    <div
+      className="group rounded-xl border border-border/70 bg-card/70 p-5 shadow-sm backdrop-blur
+                 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md
+                 motion-reduce:transform-none motion-reduce:transition-none"
+      style={{
+        animation: 'cc-fade-up 520ms ease-out both',
+        animationDelay: `${120 + index * 90}ms`,
+      }}
+    >
+      <div className="flex items-start gap-3">
+        <div
+          className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
+          aria-hidden="true"
+        >
+          <span className="text-sm font-semibold">{index + 1}</span>
+        </div>
+        <div className="min-w-0">
+          <h2 className="text-base font-semibold text-foreground">{title}</h2>
+          <div className="mt-2 text-sm leading-relaxed text-muted-foreground">{children}</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function PrivacyPage() {
   const lastUpdated = '2026-01-01' // set your real date
+
+  // Lazy evaluation: content defined once, rendered via map
+  const sections = [
+    {
+      title: 'Information we collect',
+      content: (
+        <div className="space-y-2">
+          <div>
+            <span className="font-medium text-foreground">Account data:</span> name, email, and authentication
+            identifiers.
+          </div>
+          <div>
+            <span className="font-medium text-foreground">Usage data:</span> basic logs for security and performance.
+          </div>
+          <div>
+            <span className="font-medium text-foreground">Content you provide:</span> notices, materials, messages, or
+            uploads you submit.
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: 'How we use information',
+      content: (
+        <ul className="list-disc space-y-1 pl-5">
+          <li>Provide and maintain the service (authentication, access, content delivery).</li>
+          <li>Secure the platform (fraud detection, abuse prevention, auditing).</li>
+          <li>Improve performance and user experience (analytics, debugging).</li>
+          <li>Communicate with you (support responses, service updates).</li>
+        </ul>
+      ),
+    },
+    {
+      title: 'Sharing',
+      content: (
+        <>
+          We do not sell your personal information. We may share information with service providers strictly to operate
+          CampusConnect, and when required by law.
+        </>
+      ),
+    },
+    {
+      title: 'Retention and security',
+      content: (
+        <>
+          We retain data as long as needed to provide the service and meet legal/security requirements. We use reasonable
+          safeguards, but no system is 100% secure.
+        </>
+      ),
+    },
+    {
+      title: 'Contact',
+      content: (
+        <>
+          For privacy questions, visit{' '}
+          <Link href="/support" className="underline underline-offset-4 hover:no-underline">
+            Support
+          </Link>
+          .
+        </>
+      ),
+    },
+  ] as const
 
   return (
     <main className="min-h-screen bg-background">
       <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-          {/* Breadcrumb with SVG Home button */}
           <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link
               href="/"
@@ -56,63 +153,35 @@ export default function PrivacyPage() {
         </div>
       </header>
 
-      {/* Policy in a “box” (Card) with better styling */}
       <section className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
         <Card className="border-border/70 shadow-sm">
           <CardHeader className="space-y-1">
             <CardTitle className="text-base">CampusConnect Privacy</CardTitle>
             <p className="text-sm text-muted-foreground">
-              Summary: we collect only what we need to operate the platform.
+              Each section below explains how your data is handled.
             </p>
           </CardHeader>
 
           <CardContent className="p-6 sm:p-8">
-            <div className="prose prose-neutral max-w-none dark:prose-invert">
-              <h2>1. Information we collect</h2>
-              <ul>
-                <li>
-                  <strong>Account data:</strong> name, email, and authentication identifiers.
-                </li>
-                <li>
-                  <strong>Usage data:</strong> basic logs for security and performance.
-                </li>
-                <li>
-                  <strong>Content you provide:</strong> notices, materials, messages, or uploads you submit.
-                </li>
-              </ul>
-
-              <h2>2. How we use information</h2>
-              <ul>
-                <li>Provide and maintain the service (authentication, access, content delivery).</li>
-                <li>Secure the platform (fraud detection, abuse prevention, auditing).</li>
-                <li>Improve performance and user experience (analytics, debugging).</li>
-                <li>Communicate with you (support responses, service updates).</li>
-              </ul>
-
-              <h2>3. Sharing</h2>
-              <p>
-                We do not sell your personal information. We may share information with service providers strictly to
-                operate CampusConnect, and when required by law.
-              </p>
-
-              <h2>4. Retention and security</h2>
-              <p>
-                We retain data as long as needed to provide the service and meet legal/security requirements. We use
-                reasonable safeguards, but no system is 100% secure.
-              </p>
-
-              <h2>5. Contact</h2>
-              <p>
-                For privacy questions, visit{' '}
-                <Link href="/support" className="underline underline-offset-4 hover:no-underline">
-                  Support
-                </Link>
-                .
-              </p>
+            {/* Animated Section Boxes */}
+            <div className="grid gap-4">
+              {sections.map((s, i) => (
+                <SectionBox key={s.title} title={s.title} index={i}>
+                  {s.content}
+                </SectionBox>
+              ))}
             </div>
           </CardContent>
         </Card>
       </section>
+
+      {/* local keyframes */}
+      <style>{`
+        @keyframes cc-fade-up {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </main>
   )
 }
