@@ -46,20 +46,20 @@ export default function EventsList() {
         ) : (
           <div className="space-y-4">
             {events.map((event) => (
-              <div key={event.id} className="border border-border rounded-lg p-4 hover:bg-card hover:shadow-sm transition">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-foreground">{event.title}</h4>
-                    <p className="text-sm text-muted-foreground mt-1">
+              <div key={event.id} className="border border-border rounded-lg p-3 sm:p-4 hover:bg-card hover:shadow-sm transition">
+                <div className="flex flex-col gap-2">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-sm sm:text-base text-foreground break-words">{event.title}</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
                       <TextWithLinks text={event.description} />
                     </p>
                   </div>
                 </div>
-                <div className="mt-3 space-y-1">
-                  <p className="text-sm text-muted-foreground">
+                <div className="mt-2 sm:mt-3 space-y-1 text-xs sm:text-sm">
+                  <p className="text-muted-foreground">
                     📅 {new Date(event.start_date).toLocaleDateString()}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground break-words">
                     📍 {event.location ? <TextWithLinks text={event.location} /> : 'TBA'}
                   </p>
                 </div>

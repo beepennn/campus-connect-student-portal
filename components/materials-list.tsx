@@ -46,12 +46,12 @@ export default function MaterialsList() {
         ) : (
           <div className="space-y-4">
             {materials.map((material) => (
-              <div key={material.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                <h4 className="font-semibold">{material.title}</h4>
-                <p className="text-sm text-muted-foreground mt-1">
+              <div key={material.id} className="border rounded-lg p-3 sm:p-4 hover:bg-gray-50 transition">
+                <h4 className="font-semibold text-sm sm:text-base break-words">{material.title}</h4>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
                   <TextWithLinks text={material.description} />
                 </p>
-                <div className="flex justify-between items-center mt-3">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mt-3">
                   <span className="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
                     {material.subject || 'General'}
                   </span>
@@ -61,7 +61,7 @@ export default function MaterialsList() {
                       download
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs bg-primary text-primary-foreground px-3 py-1 rounded hover:bg-primary/90 transition inline-block font-medium"
+                      className="text-xs bg-primary text-primary-foreground px-3 py-1 rounded hover:bg-primary/90 transition inline-block font-medium w-full sm:w-auto text-center"
                     >
                       Open
                     </a>

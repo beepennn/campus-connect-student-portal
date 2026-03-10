@@ -126,15 +126,15 @@ export default function EventsManagementPage() {
     <div className="min-h-screen bg-background">
       <Navbar user={user} />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold">Manage Events</h1>
-              <p className="text-muted-foreground mt-2">Create and manage campus events</p>
+              <h1 className="text-2xl sm:text-3xl font-bold">Manage Events</h1>
+              <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Create and manage campus events</p>
             </div>
             <Link href="/protected/admin/dashboard">
-              <Button variant="outline">Back</Button>
+              <Button variant="outline" className="w-full sm:w-auto">Back</Button>
             </Link>
           </div>
 
@@ -153,7 +153,7 @@ export default function EventsManagementPage() {
                     required
                   />
                 </div>
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Date & Time</label>
                     <Input
@@ -200,20 +200,20 @@ export default function EventsManagementPage() {
                   <p className="text-muted-foreground">No events yet</p>
                 ) : (
                   events.map((event) => (
-                    <div key={event.id} className="border rounded-lg p-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-semibold">{event.title}</h4>
-                          <p className="text-sm text-muted-foreground mt-1">{event.description}</p>
+                    <div key={event.id} className="border rounded-lg p-3 sm:p-4">
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-sm sm:text-base break-words">{event.title}</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">{event.description}</p>
                           <div className="mt-2 space-y-1">
-                            <p className="text-sm">
+                            <p className="text-xs sm:text-sm">
                               📅 {new Date(event.start_date).toLocaleDateString()}{' '}
                               {new Date(event.start_date).toLocaleTimeString()}
                             </p>
-                            {event.location && <p className="text-sm">📍 {event.location}</p>}
+                            {event.location && <p className="text-xs sm:text-sm break-words">📍 {event.location}</p>}
                           </div>
                         </div>
-                        <div className="space-x-2">
+                        <div className="flex gap-2 w-full sm:w-auto">
                           <Button
                             size="sm"
                             variant="outline"
@@ -221,9 +221,10 @@ export default function EventsManagementPage() {
                               setTitle(event.title)
                               setDescription(event.description)
                               setLocation(event.location || '')
-                              setEventDate(event.event_date.slice(0, 16))
+                              setEventDate(event.start_date.slice(0, 16))
                               setEditingId(event.id)
                             }}
+                            className="flex-1 sm:flex-none"
                           >
                             Edit
                           </Button>
@@ -231,6 +232,7 @@ export default function EventsManagementPage() {
                             size="sm"
                             variant="destructive"
                             onClick={() => handleDelete(event.id)}
+                            className="flex-1 sm:flex-none"
                           >
                             Delete
                           </Button>

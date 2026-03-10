@@ -43,14 +43,14 @@ export default function AnnouncementsList() {
         ) : announcements.length === 0 ? (
           <p className="text-sm text-muted-foreground">No announcements yet</p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {announcements.map((announcement) => (
-              <div key={announcement.id} className="text-sm border-b pb-3 last:border-b-0">
-                <p className="font-medium">{announcement.title}</p>
-                <p className="text-xs text-muted-foreground mt-1">
+              <div key={announcement.id} className="text-xs sm:text-sm border-b pb-2 sm:pb-3 last:border-b-0">
+                <p className="font-medium break-words">{announcement.title}</p>
+                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                   <TextWithLinks text={announcement.description || announcement.title} />
                 </p>
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-gray-400 mt-1 sm:mt-2">
                   {new Date(announcement.created_at).toLocaleDateString()}
                 </p>
               </div>

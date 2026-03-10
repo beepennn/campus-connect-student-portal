@@ -116,15 +116,15 @@ export default function AnnouncementsManagementPage() {
     <div className="min-h-screen bg-background">
       <Navbar user={user} />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold">Manage Announcements</h1>
-              <p className="text-muted-foreground mt-2">Post quick announcements</p>
+              <h1 className="text-2xl sm:text-3xl font-bold">Manage Announcements</h1>
+              <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Post quick announcements</p>
             </div>
             <Link href="/protected/admin/dashboard">
-              <Button variant="outline">Back</Button>
+              <Button variant="outline" className="w-full sm:w-auto">Back</Button>
             </Link>
           </div>
 
@@ -162,16 +162,16 @@ export default function AnnouncementsManagementPage() {
                   announcements.map((announcement) => (
                     <div
                       key={announcement.id}
-                      className="border rounded-lg p-4 flex justify-between items-start"
+                      className="border rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4"
                     >
-                      <div>
-                        <p className="font-semibold">{announcement.title}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm sm:text-base break-words">{announcement.title}</p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {new Date(announcement.created_at).toLocaleDateString()}{' '}
                           {new Date(announcement.created_at).toLocaleTimeString()}
                         </p>
                       </div>
-                      <div className="space-x-2">
+                      <div className="flex gap-2 w-full sm:w-auto">
                         <Button
                           size="sm"
                           variant="outline"
@@ -179,6 +179,7 @@ export default function AnnouncementsManagementPage() {
                             setTitle(announcement.title)
                             setEditingId(announcement.id)
                           }}
+                          className="flex-1 sm:flex-none"
                         >
                           Edit
                         </Button>
@@ -186,6 +187,7 @@ export default function AnnouncementsManagementPage() {
                           size="sm"
                           variant="destructive"
                           onClick={() => handleDelete(announcement.id)}
+                          className="flex-1 sm:flex-none"
                         >
                           Delete
                         </Button>

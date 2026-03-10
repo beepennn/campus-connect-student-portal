@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +14,31 @@ import {
 export default function Navbar({ user }: { user: any }) {
   const supabase = createClient()
   const router = useRouter()
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Check if user is truly an admin by querying admin_users table
+    async function checkAdminStatus() {
+      try {
+        const { data } = await supabase
+          .from('admin_users')
+          .select('id')
+          .eq('user_id', user.id)
+          .single()
+
+        setIsAdmin(!!data)
+      } catch (error) {
+        setIsAdmin(false)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (user?.id) {
+      checkAdminStatus()
+    }
+  }, [user?.id, supabase])
 
   async function handleLogout() {
     await supabase.auth.signOut()
@@ -33,7 +59,7 @@ export default function Navbar({ user }: { user: any }) {
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground hidden sm:block">
-            {user?.user_metadata?.user_type === 'admin' ? '🔐 Admin' : '👤 Student'}
+            {isAdmin ? '🔐 Admin' : '👤 Student'}
           </span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -48,7 +74,7 @@ export default function Navbar({ user }: { user: any }) {
               <DropdownMenuItem onClick={() => router.push('/protected/settings')}>
                 <span>⚙️ Settings</span>
               </DropdownMenuItem>
-              {user?.user_metadata?.user_type === 'admin' && (
+              {isAdmin && (
                 <DropdownMenuItem onClick={() => router.push('/protected/admin/dashboard')}>
                   <span>🔐 Admin Panel</span>
                 </DropdownMenuItem>
