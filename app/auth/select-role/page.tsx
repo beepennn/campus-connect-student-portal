@@ -11,12 +11,13 @@ export default function SelectRolePage() {
   const router = useRouter()
   const supabase = createClient()
 
-  async function handleRoleSelect(role: 'student' | 'admin') {
+  async function handleRoleSelect() {
     setLoading(true)
     try {
+      // All OAuth users default to student role
       const { error } = await supabase.auth.updateUser({
         data: {
-          user_type: role,
+          user_type: 'student',
         },
       })
 
@@ -40,29 +41,20 @@ export default function SelectRolePage() {
         <CardContent>
           <div className="space-y-3">
             <Button
-              onClick={() => handleRoleSelect('student')}
+              onClick={handleRoleSelect}
               disabled={loading}
               className="w-full h-24 text-lg"
-              variant="outline"
+              variant="default"
             >
               <div className="text-center">
                 <div className="text-2xl mb-2">👨‍🎓</div>
-                <div>I'm a Student</div>
-                <div className="text-xs text-gray-500">View materials and announcements</div>
+                <div>Continue as Student</div>
+                <div className="text-xs text-gray-400">View materials and announcements</div>
               </div>
             </Button>
-            <Button
-              onClick={() => handleRoleSelect('admin')}
-              disabled={loading}
-              className="w-full h-24 text-lg"
-              variant="outline"
-            >
-              <div className="text-center">
-                <div className="text-2xl mb-2">👨‍🏫</div>
-                <div>I'm Faculty/Admin</div>
-                <div className="text-xs text-gray-500">Manage content and students</div>
-              </div>
-            </Button>
+            <p className="text-xs text-center text-muted-foreground mt-4">
+              Admin/Faculty access is granted by administrators only. Contact your campus administrator to request admin access.
+            </p>
           </div>
         </CardContent>
       </Card>

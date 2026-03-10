@@ -15,7 +15,8 @@ export default function SignUpPage() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [fullName, setFullName] = useState('')
-  const [userType, setUserType] = useState<'student' | 'admin'>('student')
+  // All new signups are students by default - no option to select admin
+  const [userType] = useState<'student'>('student')
   const [loading, setLoading] = useState(false)
   const [oauthLoading, setOAuthLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -195,20 +196,7 @@ export default function SignUpPage() {
                 <p className="text-xs text-red-600 mt-1">Passwords do not match</p>
               )}
             </div>
-            <div>
-              <label htmlFor="usertype" className="block text-sm font-medium mb-2">
-                I am a
-              </label>
-              <select
-                id="usertype"
-                value={userType}
-                onChange={(e) => setUserType(e.target.value as 'student' | 'admin')}
-                className="w-full px-3 py-2 border border-input rounded-md bg-background"
-              >
-                <option value="student">Student</option>
-                <option value="admin">Faculty/Admin</option>
-              </select>
-            </div>
+
             {error && (
               <div className="text-red-600 text-sm bg-red-50 p-3 rounded border border-red-200">
                 {error}

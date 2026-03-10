@@ -17,15 +17,17 @@ export default async function AdminLayout({
     redirect('/auth/login')
   }
 
-  // Check if user is actually an admin (from database, not just metadata)
-  const { data: adminData } = await supabase
+  // Check if user is in admin_users table (the only valid way to be an admin)
+  const { data: adminData, error } = await supabase
     .from('admin_users')
     .select('id')
     .eq('user_id', user.id)
     .single()
 
-  // If admin_users table doesn't exist, check user_metadata
-  if (!adminData && user.user_metadata?.user_type !== 'admin') {
+  // IMPORTANT: User MUST be in admin_users table to access admin panel
+  // Even if they somehow set user_type to 'admin' in metadata, they won't be authorized
+  if (!adminData || error) {
+    // Redirect non-admins to student dashboard
     redirect('/protected/dashboard')
   }
 
