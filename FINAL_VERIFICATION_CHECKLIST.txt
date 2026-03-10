@@ -1,0 +1,183 @@
+CAMPUSCONNECT - FINAL VERIFICATION CHECKLIST
+==============================================
+
+Before Demo Day - Run Through This Checklist:
+
+AUTHENTICATION & LOGIN
+======================
+[ ] Login page displays with email/password fields
+[ ] "Remember Me" checkbox works (saves email to localStorage)
+[ ] "Forgot Password?" link navigates to forgot-password page
+[ ] Google OAuth button visible and clickable
+[ ] GitHub OAuth button visible and clickable
+[ ] Password strength indicator shows on signup
+[ ] Confirm password validation works
+[ ] Sign up creates account successfully
+
+AUTHORIZATION & SECURITY
+========================
+[ ] Student logging in sees student dashboard
+[ ] Admin logging in sees admin panel option in navbar
+[ ] Non-admin trying to access /protected/admin gets redirected
+[ ] Selecting "Admin" during signup doesn't grant access (must be approved)
+[ ] Server-side authorization in /app/protected/admin/layout.tsx protects routes
+[ ] Client-side authorization in admin pages prevents bypass
+
+STUDENT DASHBOARD
+=================
+[ ] All notices display with clickable links (blue, underlined)
+[ ] All announcements display with proper formatting and line breaks
+[ ] All events display with clickable location links
+[ ] All materials display with working download buttons
+[ ] Line breaks (Enter key) display correctly in all content
+
+ADMIN PANEL - ANNOUNCEMENTS
+============================
+[ ] Create new announcement with multiline text
+[ ] Text with URLs becomes clickable links
+[ ] Edit announcement works and saves changes
+[ ] Delete announcement prompts for confirmation
+[ ] Delete removes announcement from dashboard
+
+ADMIN PANEL - NOTICES
+=====================
+[ ] Create notice with multiline text
+[ ] Text with URLs becomes clickable
+[ ] Edit notice works and saves changes
+[ ] Delete notice prompts for confirmation
+[ ] Delete removes from student view
+
+ADMIN PANEL - EVENTS
+====================
+[ ] Create event with location URL
+[ ] Event location becomes clickable link
+[ ] Edit event changes appear in student view
+[ ] Delete event prompts for confirmation
+[ ] Start date displays correctly in student view
+
+ADMIN PANEL - MATERIALS
+=======================
+[ ] Upload material file successfully
+[ ] Material appears in student dashboard
+[ ] Download button downloads the file
+[ ] Edit material updates file
+[ ] Delete material removes from dashboard
+
+SETTINGS PAGE
+=============
+[ ] Reset Password button sends email
+[ ] Notification checkboxes are clickable
+[ ] Toggling notification saves preference
+[ ] Delete Account button shows double confirmation
+[ ] Clicking "OK" twice deletes account
+[ ] Deleted account redirects to login
+[ ] Account is fully deleted from system
+
+PROFILE PAGE
+============
+[ ] Profile displays read-only information
+[ ] Full name shows correctly
+[ ] Email shows correctly
+[ ] User type (Student/Admin) displays
+[ ] Account creation date shows
+[ ] Back to Dashboard button works
+
+NAVBAR
+======
+[ ] Logo clickable - navigates to dashboard
+[ ] User name dropdown button works
+[ ] Profile link navigates correctly
+[ ] Settings link navigates correctly
+[ ] Admin Panel link visible only for admins
+[ ] Logout button signs out user properly
+[ ] Role badge shows "Student" or "Admin" correctly
+
+TECHNICAL CHECKS
+================
+[ ] No console errors in browser
+[ ] No network 404 errors
+[ ] Page loading speed acceptable
+[ ] Mobile responsive design works
+[ ] Forms submit without errors
+[ ] Database queries complete successfully
+
+FILE UPLOADS
+============
+[ ] Material file uploads successfully
+[ ] File appears in database
+[ ] File storage bucket is accessible
+[ ] Download link works in production
+
+OAUTH INTEGRATION
+=================
+[ ] Google OAuth redirects correctly
+[ ] GitHub OAuth redirects correctly
+[ ] OAuth users arrive at role selection page
+[ ] After selecting role, users land on dashboard
+[ ] OAuth user data populates correctly
+
+EDGE CASES
+==========
+[ ] Multiple users logging in simultaneously
+[ ] Deleting account while material is uploading
+[ ] Refreshing page during form submission
+[ ] Clicking back button after logout
+[ ] Accessing admin page with student account
+[ ] Clearing browser cache/cookies doesn't break app
+
+FINAL CHECKS
+============
+[ ] No dummy/non-functional buttons exist
+[ ] All buttons have proper handlers
+[ ] No broken links
+[ ] All redirects work correctly
+[ ] Error messages are clear and helpful
+[ ] Success messages display confirmations
+[ ] Loading states show during API calls
+
+DEPLOYMENT VERIFICATION
+=======================
+[ ] Code pushed to main branch
+[ ] Vercel deployment complete
+[ ] Environment variables configured
+[ ] Database migrations executed
+[ ] Storage bucket created
+[ ] OAuth credentials valid
+[ ] Production URL accessible
+[ ] HTTPS certificate valid
+
+PERFORMANCE
+===========
+[ ] Dashboard loads in < 2 seconds
+[ ] Admin pages load in < 2 seconds
+[ ] File upload completes within 30 seconds
+[ ] No missing images/assets
+[ ] Styling matches across pages
+
+SECURITY
+========
+[ ] No sensitive data in console logs
+[ ] No passwords stored in localStorage
+[ ] API calls use HTTPS
+[ ] Database RLS policies enforced
+[ ] Admin routes protected server-side
+[ ] File uploads validate file types
+[ ] XSS protection in place
+[ ] CSRF protection configured
+
+DEMO FLOW
+=========
+1. Show student login (Remember Me option)
+2. Show student dashboard with all content
+3. Click links in notices - opens in new tab
+4. Switch to admin account
+5. Create announcement with multiline text
+6. Show it appears on student dashboard with links
+7. Create event with location link
+8. Upload material and download
+9. Delete item and show confirmation
+10. Show settings - delete account flow
+11. Show admin authorization (non-admin can't access)
+12. End by logging out
+
+IF ALL CHECKS PASS: ✅ READY FOR DEMO DAY!
