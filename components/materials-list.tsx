@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { TextWithLinks } from '@/components/text-with-links'
 
 export default function MaterialsList() {
   const [materials, setMaterials] = useState<any[]>([])
@@ -47,7 +48,9 @@ export default function MaterialsList() {
             {materials.map((material) => (
               <div key={material.id} className="border rounded-lg p-4 hover:bg-gray-50">
                 <h4 className="font-semibold">{material.title}</h4>
-                <p className="text-sm text-muted-foreground mt-1">{material.description}</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  <TextWithLinks text={material.description} />
+                </p>
                 <div className="flex justify-between items-center mt-3">
                   <span className="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
                     {material.subject || 'General'}

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { TextWithLinks } from '@/components/text-with-links'
 
 export default function EventsList() {
   const [events, setEvents] = useState<any[]>([])
@@ -49,14 +50,18 @@ export default function EventsList() {
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <h4 className="font-semibold text-foreground">{event.title}</h4>
-                    <p className="text-sm text-muted-foreground mt-1">{event.description}</p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      <TextWithLinks text={event.description} />
+                    </p>
                   </div>
                 </div>
                 <div className="mt-3 space-y-1">
                   <p className="text-sm text-muted-foreground">
                     📅 {new Date(event.start_date).toLocaleDateString()}
                   </p>
-                  <p className="text-sm text-muted-foreground">📍 {event.location || 'TBA'}</p>
+                  <p className="text-sm text-muted-foreground">
+                    📍 {event.location ? <TextWithLinks text={event.location} /> : 'TBA'}
+                  </p>
                 </div>
               </div>
             ))}

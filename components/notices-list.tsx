@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { TextWithLinks } from '@/components/text-with-links'
 
 export default function NoticesList() {
   const [notices, setNotices] = useState<any[]>([])
@@ -47,7 +48,9 @@ export default function NoticesList() {
             {notices.map((notice) => (
               <div key={notice.id} className="border-l-4 border-primary pl-4 py-2">
                 <h5 className="font-semibold text-foreground">{notice.title}</h5>
-                <p className="text-sm text-muted-foreground">{notice.content}</p>
+                <p className="text-sm text-muted-foreground">
+                  <TextWithLinks text={notice.content} />
+                </p>
               </div>
             ))}
           </div>

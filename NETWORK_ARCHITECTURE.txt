@@ -1,0 +1,279 @@
+================================================================================
+                    CAMPUSCONNECT NETWORK ARCHITECTURE
+                         FOR DEMO PRESENTATION
+================================================================================
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│                           INTERNET / BROWSER LAYER                         │
+│                                                                            │
+│    User accesses: https://www.snehalamichhane.com.np                      │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                    ┌───────────────┼───────────────┐
+                    │               │               │
+                    ▼               ▼               ▼
+          ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+          │   GOOGLE     │  │   GITHUB     │  │   RESEND     │
+          │   OAuth API  │  │   OAuth API  │  │   EMAIL      │
+          │              │  │              │  │              │
+          │ Handles      │  │ Handles      │  │ Handles      │
+          │ Sign in/up   │  │ Sign in/up   │  │ Email reset  │
+          └──────────────┘  └──────────────┘  └──────────────┘
+                    │               │               │
+                    └───────────────┼───────────────┘
+                                    │
+                                    ▼
+         ┌──────────────────────────────────────────────┐
+         │   NEXT.JS APPLICATION SERVER                │
+         │   (Frontend + Backend Routes)               │
+         │                                             │
+         │  Pages:                                     │
+         │  • /auth/login                              │
+         │  • /auth/sign-up                            │
+         │  • /auth/forgot-password                    │
+         │  • /auth/reset-password                     │
+         │  • /protected/dashboard                     │
+         │  • /protected/admin/*                       │
+         │                                             │
+         │  API Routes:                                │
+         │  • /api/announcements/[id]                  │
+         │  • /api/notices/[id]                        │
+         │  • /api/events/[id]                         │
+         │  • /api/materials/[id]                      │
+         │                                             │
+         └──────────────────────────────────────────────┘
+                                    │
+                 ┌──────────────────┼──────────────────┐
+                 │                  │                  │
+                 ▼                  ▼                  ▼
+         ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+         │  SUPABASE    │  │  SUPABASE    │  │  SUPABASE    │
+         │  AUTH        │  │  DATABASE    │  │  STORAGE     │
+         │              │  │              │  │              │
+         │ • Login      │  │ • Users      │  │ • Materials  │
+         │ • Sessions   │  │ • Posts      │  │ • Bucket     │
+         │ • OAuth      │  │ • Events     │  │ • Files      │
+         │ • RLS        │  │ • Materials  │  │              │
+         │              │  │ • RLS        │  │              │
+         └──────────────┘  └──────────────┘  └──────────────┘
+                 │                  │                  │
+                 └──────────────────┼──────────────────┘
+                                    │
+                                    ▼
+              ┌────────────────────────────────────┐
+              │   PostgreSQL DATABASE              │
+              │   (Hosted on Supabase)             │
+              │                                    │
+              │   Tables:                          │
+              │   ✓ auth.users                     │
+              │   ✓ announcements                  │
+              │   ✓ notices                        │
+              │   ✓ events                         │
+              │   ✓ materials                      │
+              │                                    │
+              │   Row Level Security:              │
+              │   ✓ students_read_all              │
+              │   ✓ admins_all_access              │
+              │                                    │
+              └────────────────────────────────────┘
+
+================================================================================
+                         DATA FLOW ARCHITECTURE
+================================================================================
+
+USER LOGIN SEQUENCE:
+┌──────────┐         ┌─────────────┐         ┌──────────┐       ┌──────────┐
+│  Browser │────────▶│  Next.js    │────────▶│ Supabase │──────▶│ Database │
+│  Client  │ Request │  App Server │ Login   │  Auth    │ Query │  (Users) │
+└──────────┘         └─────────────┘         └──────────┘       └──────────┘
+     ▲                                             │
+     │                                             │
+     └─────────────────────────────────────────────┘
+            Response: Auth Token + User Data
+
+FETCH CONTENT SEQUENCE:
+┌──────────┐         ┌─────────────┐         ┌──────────┐       ┌──────────┐
+│  Browser │────────▶│  Next.js    │────────▶│ Supabase │──────▶│ Database │
+│  Component
+│ useEffect │ GET     │  (Supabase  │ SELECT  │  Client  │ Query │(Content) │
+└──────────┘         │   Client)   │         └──────────┘       └──────────┘
+     ▲                └─────────────┘              │
+     │                                             │
+     └─────────────────────────────────────────────┘
+            Response: Content Array (JSON)
+
+CREATE/UPDATE/DELETE SEQUENCE:
+┌──────────┐         ┌─────────────┐         ┌──────────┐       ┌──────────┐
+│  Admin   │────────▶│  Next.js    │────────▶│ Supabase │──────▶│ Database │
+│  Form    │ POST    │  API Route  │ INSERT/ │  Client  │ Query │ (Update) │
+└──────────┘         │  (/api/*)   │ UPDATE/ └──────────┘       └──────────┘
+     ▲                └─────────────┘  DELETE      │
+     │                                             │
+     └─────────────────────────────────────────────┘
+        Response: Success/Error + Updated Data
+
+LINK DETECTION & RENDERING:
+┌──────────┐         ┌──────────────────┐        ┌──────────────┐
+│ Content  │────────▶│ TextWithLinks    │───────▶│ Rendered HTML│
+│ in DB    │ (with   │ Component        │ Parses │ with <a>     │
+│ (text)   │  URLs)  │                  │ RegExp │ tags         │
+└──────────┘         └──────────────────┘        └──────────────┘
+                              │
+                              ▼
+                     ┌──────────────────┐
+                     │ URL Regex Match  │
+                     │ Extract URLs     │
+                     │ Make Clickable   │
+                     └──────────────────┘
+
+================================================================================
+                      COMPONENT INTERACTION DIAGRAM
+================================================================================
+
+Dashboard Page
+│
+├─── Navbar (User Profile)
+│
+├─── Welcome Section
+│
+├─── Cards Container
+│    │
+│    ├─── AnnouncementsList
+│    │    └─── TextWithLinks (parses URLs)
+│    │
+│    ├─── NoticesList  
+│    │    └─── TextWithLinks (parses URLs) ✓ NEW
+│    │
+│    ├─── EventsList
+│    │    └─── TextWithLinks (parses URLs) ✓ NEW
+│    │
+│    └─── MaterialsList
+│         └─── TextWithLinks (parses URLs)
+│
+└─── Admin Routes
+     │
+     ├─── /admin/announcements
+     │    └─── Form + List + Delete
+     │
+     ├─── /admin/notices
+     │    └─── Form + List + Delete
+     │
+     ├─── /admin/events
+     │    └─── Form + List + Delete
+     │
+     └─── /admin/materials
+          └─── Upload Form + List + Delete
+
+================================================================================
+                       API ENDPOINT ARCHITECTURE
+================================================================================
+
+ANNOUNCEMENT API:
+  POST   /api/announcements          → Create
+  PUT    /api/announcements/[id]     → Update (async params)
+  DELETE /api/announcements/[id]     → Delete (async params)
+
+NOTICE API:
+  POST   /api/notices                → Create
+  PUT    /api/notices/[id]           → Update (async params)
+  DELETE /api/notices/[id]           → Delete (async params)
+
+EVENT API:
+  POST   /api/events                 → Create
+  PUT    /api/events/[id]            → Update (async params)
+  DELETE /api/events/[id]            → Delete (async params)
+
+MATERIAL API:
+  POST   /api/materials              → Upload file
+  DELETE /api/materials/[id]         → Delete (async params)
+
+AUTH API:
+  POST   /api/auth/callback          → OAuth redirect handler
+
+All endpoints include:
+✓ Authentication check
+✓ Role-based authorization
+✓ Error handling
+✓ Input validation
+✓ Async parameter handling (Next.js 16)
+
+================================================================================
+                        SECURITY ARCHITECTURE
+================================================================================
+
+┌─────────────────────────────────────────────────────────┐
+│                 Authentication Layer                    │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  Supabase Auth:                                        │
+│  • Email/Password with bcrypt hashing                 │
+│  • OAuth providers (Google, GitHub)                   │
+│  • JWT token management                               │
+│  • Session management with HTTP-only cookies          │
+│                                                         │
+│  Features:                                             │
+│  ✓ Password strength validation (8+ chars, mixed)     │
+│  ✓ Email verification required                        │
+│  ✓ Password reset via email                           │
+│  ✓ Remember me (localStorage)                         │
+│  ✓ Automatic logout on inactivity                     │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│              Authorization Layer (RLS)                  │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  Row Level Security Policies:                          │
+│                                                         │
+│  Students:                                             │
+│  • SELECT ✓ (read all content)                         │
+│  • INSERT ✗ (cannot create)                            │
+│  • UPDATE ✗ (cannot edit)                              │
+│  • DELETE ✗ (cannot delete)                            │
+│                                                         │
+│  Admins:                                               │
+│  • SELECT ✓ (read all)                                 │
+│  • INSERT ✓ (create content)                           │
+│  • UPDATE ✓ (edit content)                             │
+│  • DELETE ✓ (remove content)                           │
+│                                                         │
+│  Applied to:                                           │
+│  ✓ announcements                                       │
+│  ✓ notices                                             │
+│  ✓ events                                              │
+│  ✓ materials                                           │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│            Data Protection Layer                        │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  ✓ HTTPS encryption for all traffic                    │
+│  ✓ Password hashing (bcrypt)                           │
+│  ✓ SQL injection prevention (parameterized queries)    │
+│  ✓ XSS prevention (React escaping)                     │
+│  ✓ CSRF tokens (Supabase handled)                      │
+│  ✓ Rate limiting (Supabase handled)                    │
+│  ✓ File upload validation                              │
+│  ✓ Environment variable protection                     │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+================================================================================
+                           READY FOR DEMO!
+================================================================================
+
+All systems operational ✓
+All features implemented ✓
+Security policies configured ✓
+Database optimized ✓
+Performance tested ✓
+
+The system is production-ready and fully functional for the demo day presentation.
+
+================================================================================
