@@ -63,7 +63,7 @@ export default function MaterialsList() {
                       rel="noopener noreferrer"
                       className="text-xs bg-primary text-primary-foreground px-3 py-1 rounded hover:bg-primary/90 transition inline-block font-medium"
                     >
-                      📥 Download
+                      Open
                     </a>
                   )}
                 </div>
