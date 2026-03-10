@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { TextWithLinks } from '@/components/text-with-links'
 
 export default function AnnouncementsList() {
   const [announcements, setAnnouncements] = useState<any[]>([])
@@ -47,6 +48,9 @@ export default function AnnouncementsList() {
               <div key={announcement.id} className="text-sm border-b pb-3 last:border-b-0">
                 <p className="font-medium">{announcement.title}</p>
                 <p className="text-xs text-muted-foreground mt-1">
+                  <TextWithLinks text={announcement.description || announcement.title} />
+                </p>
+                <p className="text-xs text-gray-400 mt-2">
                   {new Date(announcement.created_at).toLocaleDateString()}
                 </p>
               </div>
