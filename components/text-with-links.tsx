@@ -30,7 +30,7 @@ export function TextWithLinks({ text }: { text: string }) {
   const parts = extractLinks(text)
 
   return (
-    <>
+    <div className="whitespace-pre-wrap break-words">
       {parts.map((part, index) => {
         if (typeof part === 'string') {
           return <span key={index}>{part}</span>
@@ -48,6 +48,6 @@ export function TextWithLinks({ text }: { text: string }) {
           </a>
         )
       })}
-    </>
+    </div>
   )
 }
