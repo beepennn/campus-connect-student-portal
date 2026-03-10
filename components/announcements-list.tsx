@@ -34,7 +34,7 @@ export default function AnnouncementsList() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>📝 Announcements</CardTitle>
+        <CardTitle> Announcements</CardTitle>
         <CardDescription>Quick updates</CardDescription>
       </CardHeader>
       <CardContent>
