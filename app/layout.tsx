@@ -42,12 +42,12 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  metadataBase: new URL('https://snehalamichhane.com.np'),
+  metadataBase: new URL('https://student-portal.bipinlamsal11.com.np/'),
   openGraph: {
     title: 'CampusConnect',
     description:
       'Connect with your campus community through notices, materials, events, and announcements.',
-    url: 'https://https://snehalamichhane.com.np',
+    url: 'https://student-portal.bipinlamsal11.com.np/',
     siteName: 'CampusConnect',
     type: 'website',
   },
@@ -56,6 +56,11 @@ export const metadata: Metadata = {
     title: 'CampusConnect',
     description:
       'A modern campus communication hub for students and faculty.',
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+    ],
   },
 }
 

@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { TextWithLinks } from '@/components/text-with-links'
+import { CalendarIcon, MapPinIcon, SparklesIcon } from '@heroicons/react/24/solid'
 
 export default function EventsList() {
   const [events, setEvents] = useState<any[]>([])
@@ -35,7 +36,10 @@ export default function EventsList() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>🎉 Upcoming Events</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <SparklesIcon className="w-5 h-5" aria-hidden="true" />
+          Upcoming Events
+        </CardTitle>
         <CardDescription>Activities happening on campus</CardDescription>
       </CardHeader>
       <CardContent>
@@ -56,11 +60,13 @@ export default function EventsList() {
                   </div>
                 </div>
                 <div className="mt-3 space-y-1">
-                  <p className="text-sm text-muted-foreground">
-                    📅 {new Date(event.start_date).toLocaleDateString()}
+                  <p className="text-sm text-muted-foreground flex items-center gap-1">
+                    <CalendarIcon className="w-4 h-4" aria-hidden="true" />
+                    {new Date(event.start_date).toLocaleDateString()}
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    📍 {event.location ? <TextWithLinks text={event.location} /> : 'TBA'}
+                  <p className="text-sm text-muted-foreground flex items-center gap-1">
+                    <MapPinIcon className="w-4 h-4" aria-hidden="true" />
+                    {event.location ? <TextWithLinks text={event.location} /> : 'TBA'}
                   </p>
                 </div>
               </div>

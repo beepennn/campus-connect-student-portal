@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { TextWithLinks } from '@/components/text-with-links'
+import { BookOpenIcon } from '@heroicons/react/24/solid'
 
 export default function MaterialsList() {
   const [materials, setMaterials] = useState<any[]>([])
@@ -35,7 +36,10 @@ export default function MaterialsList() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>📚 Course Materials</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <BookOpenIcon className="w-5 h-5" aria-hidden="true" />
+          Course Materials
+        </CardTitle>
         <CardDescription>Resources shared by faculty</CardDescription>
       </CardHeader>
       <CardContent>
